@@ -18,14 +18,16 @@
                     <select class="form-select mb-3"
                         id="nha-cung-cap" 
                         name="nha_cung_cap" 
+                        data-parsley-errors-container="#error-parley-nha-cung-cap"
                         required data-parsley-required-message="Vui lòng chọn nhà cung cấp">
                         <option value=""></option>
                         @foreach ($dsNhaCungCap as $nhaCungCap)
                             <option value="{{ $nhaCungCap->id }}">{{ $nhaCungCap->ho_ten }}</option>
                         @endforeach
                     </select>
+                    <div id="error-parley-nha-cung-cap"></div>
                 </div>
-                <div class="col-md-12 col-sm-12 mb-3">
+                <div class="col-md-6 col-sm-12 mb-3">
                     <label class="form-label">Mô tả</label>
                     <textarea type="text" class="form-control" name="mo_ta" placeholder="Mô tả" required data-parsley-required-message="Vui lòng nhập mô tả sản phẩm"></textarea>
                 </div>
