@@ -16,9 +16,11 @@ return new class extends Migration
             $table->integer('nhap_hang_id');
             $table->integer('san_pham_id');
             $table->integer('so_luong');
-            $table->integer('don_gia');
+            $table->integer('gia_ban');
+            $table->integer('gia_nhap');
             $table->integer('thanh_tien');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

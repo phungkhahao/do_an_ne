@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/danh-sach', [NhapHangController::class, 'index'])->name('danh_sach');
             Route::get('/them-moi', [NhapHangController::class, 'create'])->name('create');
             Route::post('/them-moi', [NhapHangController::class, 'store'])->name('store');
+            Route::get('/chi-tiet/{id}', [NhapHangController::class, 'detail'])->name('detail');
             Route::get('/cap-nhat/{id}', [NhapHangController::class, 'edit'])->name('edit');
             Route::post('/cap-nhat', [NhapHangController::class, 'update'])->name('update');
             Route::post('/xoa', [NhapHangController::class, 'delete'])->name('delete');
