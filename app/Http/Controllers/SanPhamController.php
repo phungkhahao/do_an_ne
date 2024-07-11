@@ -13,14 +13,16 @@ class SanPhamController extends Controller
 {
     public function index()
     {
-        $dsSanPham = SanPham::all();
-        return view('san-pham.danh-sach', compact('dsSanPham'));
+        $dsSanPham  = SanPham::all();
+        $module     = "SanPham";
+        return view('san-pham.danh-sach', compact('dsSanPham', 'module'));
     }
 
     public function create()
     {
+        $module     = "SanPham";
         $dsNhaCungCap = NhaCungCap::all();
-        return view('san-pham.them', compact('dsNhaCungCap'));
+        return view('san-pham.them', compact('dsNhaCungCap', 'module'));
     }
 
     public function store(Request $request)
@@ -67,9 +69,10 @@ class SanPhamController extends Controller
 
     public function edit($id)
     {
+        $module  = "SanPham";
         $sanPham    = SanPham::find($id);
         $dsNhaCungCap = NhaCungCap::all();
-        return view('san-pham.cap-nhat', compact('sanPham', 'dsNhaCungCap'));
+        return view('san-pham.cap-nhat', compact('sanPham', 'dsNhaCungCap', 'module'));
     }
 
     public function update(Request $request)

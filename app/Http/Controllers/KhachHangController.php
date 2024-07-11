@@ -12,12 +12,14 @@ class KhachHangController extends Controller
     public function index()
     {
         $dsKhachHang = KhachHang::all();
-        return view('khach-hang.danh-sach', compact('dsKhachHang'));
+        $module     = "KhachHang";
+        return view('khach-hang.danh-sach', compact('dsKhachHang', 'module'));
     }
 
     public function create()
     {
-        return view('khach-hang.them');
+        $module     = "KhachHang";
+        return view('khach-hang.them', compact('module'));
     }
 
     public function store(Request $request)
@@ -64,8 +66,9 @@ class KhachHangController extends Controller
 
     public function edit($id)
     {
-        $khachHang = KhachHang::find($id);
-        return view('khach-hang.cap-nhat', compact('khachHang'));
+        $khachHang  = KhachHang::find($id);
+        $module     = "KhachHang";
+        return view('khach-hang.cap-nhat', compact('khachHang', 'module'));
     }
 
     public function update(Request $request)

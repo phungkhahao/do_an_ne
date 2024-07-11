@@ -12,12 +12,14 @@ class ViTriController extends Controller
     public function index()
     {
         $dsViTri = ViTri::all();
-        return view('vi-tri.danh-sach', compact('dsViTri'));
+        $module  = "ViTri";
+        return view('vi-tri.danh-sach', compact('dsViTri', 'module'));
     }
 
     public function create()
     {
-        return view('vi-tri.them');
+        $module  = "ViTri";
+        return view('vi-tri.them', compact('module'));
     }
 
     public function store(Request $request)
@@ -57,8 +59,9 @@ class ViTriController extends Controller
 
     public function edit($id)
     {
-        $viTri = ViTri::find($id);
-        return view('vi-tri.cap-nhat', compact('viTri'));
+        $viTri  = ViTri::find($id);
+        $module = "ViTri";
+        return view('vi-tri.cap-nhat', compact('viTri', 'module'));
     }
 
     public function update(Request $request)

@@ -11,13 +11,15 @@ class NhaCungCapController extends Controller
 {
     public function index()
     {
-        $dsNhaCungCap = NhaCungCap::all();
-        return view('nha-cung-cap.danh-sach', compact('dsNhaCungCap'));
+        $dsNhaCungCap   = NhaCungCap::all();
+        $module         = "NhaCungCap";
+        return view('nha-cung-cap.danh-sach', compact('dsNhaCungCap', 'module'));
     }
 
     public function create()
     {
-        return view('nha-cung-cap.them');
+        $module     = "NhaCungCap";
+        return view('nha-cung-cap.them', compact('module'));
     }
 
     public function store(Request $request)
@@ -64,8 +66,9 @@ class NhaCungCapController extends Controller
 
     public function edit($id)
     {
+        $module     = "NhaCungCap";
         $nhaCungCap = NhaCungCap::find($id);
-        return view('nha-cung-cap.cap-nhat', compact('nhaCungCap'));
+        return view('nha-cung-cap.cap-nhat', compact('nhaCungCap', 'module'));
     }
 
     public function update(Request $request)
