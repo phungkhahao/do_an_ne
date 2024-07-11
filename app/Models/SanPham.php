@@ -10,4 +10,8 @@ class SanPham extends Model
     use HasFactory;
     protected $table = 'san_pham';
 
+    public function nha_cung_cap()
+    {
+        return $this->belongsTo(NhaCungCap::class);
+    }
 }
