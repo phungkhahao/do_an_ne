@@ -6,6 +6,7 @@ use App\Http\Controllers\SanPhamController;
 use App\Http\Controllers\KhachHangController;
 use App\Http\Controllers\NguoiDungController;
 use App\Http\Controllers\NhaCungCapController;
+use App\Http\Controllers\NhapHangController;
 use App\Http\Controllers\ViTriController;
 
 /*
@@ -28,6 +29,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'viewDashboard'])->name('dashboard');
     Route::get('/dang-xuat', [HomeController::class, 'dangXuat'])->name('dang_xuat');
 
+    Route::prefix('nhap-hang')->group(function () {
+        Route::name('nhap_hang.')->group(function () {
+            Route::get('/danh-sach', [NhapHangController::class, 'index'])->name('danh_sach');
+            Route::get('/them-moi', [NhapHangController::class, 'create'])->name('create');
+            Route::post('/them-moi', [NhapHangController::class, 'store'])->name('store');
+            Route::get('/cap-nhat/{id}', [NhapHangController::class, 'edit'])->name('edit');
+            Route::post('/cap-nhat', [NhapHangController::class, 'update'])->name('update');
+            Route::post('/xoa', [NhapHangController::class, 'delete'])->name('delete');
+
+        });
+    });
     Route::prefix('san-pham')->group(function () {
         Route::name('san_pham.')->group(function () {
             Route::get('/danh-sach', [SanPhamController::class, 'index'])->name('danh_sach');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NhaCungCap;
+use App\Models\NhapHang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,7 +19,8 @@ class SanPhamController extends Controller
 
     public function create()
     {
-        return view('san-pham.them');
+        $dsNhaCungCap = NhaCungCap::all();
+        return view('san-pham.them', compact('dsNhaCungCap'));
     }
 
     public function store(Request $request)
@@ -25,15 +28,17 @@ class SanPhamController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'ma' => 'required|unique:App\Models\SanPham,ma,NULL,id,deleted_at,NULL',
-                'ten' => "required",
-                'mo_ta' => "required",
+                'ma'            => 'required|unique:App\Models\SanPham,ma,NULL,id,deleted_at,NULL',
+                'ten'           => "required",
+                'mo_ta'         => "required",
+                'nha_cung_cap'  => "required",
             ],
             [
-                'ma.required'       => 'Mã sản phẩm không được trống',
-                'ten.required'      => 'Tên sản phẩm không được trống',
-                'ma.unique'         => 'Mã sản phẩm đã tồn tại',
-                'mo_ta.required'    => 'Mô tả sản phẩm không được trống',
+                'ma.required'              => 'Mã sản phẩm không được trống',
+                'ten.required'             => 'Tên sản phẩm không được trống',
+                'ma.unique'                => 'Mã sản phẩm đã tồn tại',
+                'mo_ta.required'           => 'Mô tả sản phẩm không được trống',
+                'nha_cung_cap.required'    => 'Nhà cung cấp không được trống',
             ]
         );
 
@@ -44,11 +49,12 @@ class SanPhamController extends Controller
             ], 200);
         }
 
-        $sanPham                = new SanPham();
-        $sanPham->ma            = $request->ma;
-        $sanPham->ten           = $request->ten;
-        $sanPham->mo_ta         = $request->mo_ta;
-        $sanPham->trang_thai    = 0;
+        $sanPham                     = new SanPham();
+        $sanPham->ma                 = $request->ma;
+        $sanPham->ten                = $request->ten;
+        $sanPham->mo_ta              = $request->mo_ta;
+        $sanPham->nha_cung_cap_id    = $request->nha_cung_cap;
+        $sanPham->trang_thai         = 0;
         $sanPham->save();
 
         return response()->json([
@@ -61,8 +67,9 @@ class SanPhamController extends Controller
 
     public function edit($id)
     {
-        $sanPham = SanPham::find($id);
-        return view('san-pham.cap-nhat', compact('sanPham'));
+        $sanPham    = SanPham::find($id);
+        $dsNhaCungCap = NhaCungCap::all();
+        return view('san-pham.cap-nhat', compact('sanPham', 'dsNhaCungCap'));
     }
 
     public function update(Request $request)
@@ -70,15 +77,17 @@ class SanPhamController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'ma' => "required|unique:App\Models\SanPham,ma, {$request->id},id,deleted_at,NULL",
-                'ten' => "required",
-                'mo_ta' => "required",
+                'ma'            => "required|unique:App\Models\SanPham,ma, {$request->id},id,deleted_at,NULL",
+                'ten'           => "required",
+                'mo_ta'         => "required",
+                'nha_cung_cap'  => "required",
             ],
             [
-                'ma.required'       => 'Mã sản phẩm không được trống',
-                'ten.required'      => 'Tên sản phẩm không được trống',
-                'ma.unique'         => 'Mã sản phẩm đã tồn tại',
-                'mo_ta.required'    => 'Mô tả sản phẩm không được trống',
+                'ma.required'              => 'Mã sản phẩm không được trống',
+                'ten.required'             => 'Tên sản phẩm không được trống',
+                'ma.unique'                => 'Mã sản phẩm đã tồn tại',
+                'mo_ta.required'           => 'Mô tả sản phẩm không được trống',
+                'nha_cung_cap.required'    => 'Nhà cung cấp không được trống',
             ]
         );
         
@@ -89,11 +98,12 @@ class SanPhamController extends Controller
             ], 200);
         }
 
-        $sanPham                = SanPham::find($request->id);
-        $sanPham->ma            = $request->ma;
-        $sanPham->ten           = $request->ten;
-        $sanPham->mo_ta         = $request->mo_ta;
-        $sanPham->trang_thai    = 0;
+        $sanPham                   = SanPham::find($request->id);
+        $sanPham->ma               = $request->ma;
+        $sanPham->ten              = $request->ten;
+        $sanPham->mo_ta            = $request->mo_ta;
+        $sanPham->nha_cung_cap_id  = $request->nha_cung_cap;
+        $sanPham->trang_thai       = 0;
         $sanPham->save();
 
         return response()->json([

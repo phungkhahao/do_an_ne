@@ -10,4 +10,8 @@ class NhapHang extends Model
     use HasFactory;
     protected $table = 'nhap_hang';
 
+    public function nhan_vien()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

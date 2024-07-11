@@ -14,6 +14,18 @@
                     <label class="form-label">Tên sản phầm</label>
                     <input type="text" class="form-control" name="ten" value="{{ $sanPham->ten }}" required data-parsley-required-message="Vui lòng nhập tên sản phẩm">
                 </div>
+                <div class="col-md-6 col-sm-12 mb-3">
+                    <label class="form-label">Nhà cung cấp</label>
+                    <select class="form-select mb-3"
+                        id="nha-cung-cap" 
+                        name="nha_cung_cap" 
+                        required data-parsley-required-message="Vui lòng chọn nhà cung cấp">
+                        <option value=""></option>
+                        @foreach ($dsNhaCungCap as $nhaCungCap)
+                            <option @if($nhaCungCap->id == $sanPham->nha_cung_cap_id) selected @endif value="{{ $nhaCungCap->id }}">{{ $nhaCungCap->ho_ten}}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col-md-12 col-sm-12 mb-3">
                     <label class="form-label">Mô tả</label>
                     <textarea type="text" class="form-control" name="mo_ta" required data-parsley-required-message="Vui lòng nhập mô tả sản phẩm">{{ $sanPham->mo_ta }}</textarea>
@@ -26,12 +38,27 @@
 @endsection
 @section('page-js')
 <script>
+    $("#nha-cung-cap").select2({
+        placeholder: "Chọn nhà cung cấp",
+        width: '100%',
+        closeOnSelect : true,
+        allowClear: true,
+        tags: false,
+        language: {
+            noResults: function (params) {
+                return "Không tìm thấy kết quả";
+            }
+        },
+    });
+</script>
+<script>
     $('#btn-submit-form').click(function() {
         if($('#frm-cap-nhat-san-pham').parsley().validate()) {
         var formData = new FormData();
         $("input[name='id']").map(function(){ formData.append('id', this.value)}).get();
         $("input[name='ma']").map(function(){ formData.append('ma', this.value)}).get();
         $("input[name='ten']").map(function(){ formData.append('ten', this.value)}).get();
+        $("select[name='nha_cung_cap']").map(function(){ formData.append('nha_cung_cap', this.value)}).get();
         $("textarea[name='mo_ta']").map(function(){ formData.append('mo_ta', this.value)}).get();
         $.ajax({
             url: "{{ route('san_pham.update') }}",
