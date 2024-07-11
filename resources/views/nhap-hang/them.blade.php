@@ -30,8 +30,9 @@
                         <div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <select class="form-select mb-3 san-pham"
-                                        id="san-pham" 
+                                    <select class="form-select mb-3 san-pham select-san-pham"
+                                        data-attribute="1"
+                                        id="san-pham-1" 
                                         name="san_pham" 
                                         required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                         <option value=""></option>
@@ -41,13 +42,13 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" class="form-control" id="so-luong" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="1">
+                                    <input type="number" class="form-control" id="so-luong" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="1">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" class="form-control" id="gia-nhap" name="gia_nhap" required data-parsley-required-message="Vui lòng nhập giá nhập" value="0">
+                                    <input type="number" class="form-control" id="gia-nhap" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="gia_nhap" required data-parsley-required-message="Vui lòng nhập giá nhập" value="0">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" class="form-control" id="gia-ban" name="gia_ban" required data-parsley-required-message="Vui lòng nhập giá bán" value="0">
+                                    <input type="number" class="form-control" id="gia-ban" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="gia_ban" required data-parsley-required-message="Vui lòng nhập giá bán" value="0">
                                 </div>
                                 <div class="col-md-2">
                                     <a href="#" id="btn-xoa-san-pham" onClick="xoaSanPham(this)" class="btn btn-danger ms-3">
@@ -58,9 +59,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-12 col-sm-12 mb-3 mt-3">
+                    <h5 id="tong-tien">Tổng tiền: <span>0</span></h5>
+                </div>
                 <div class="col-md-12 col-sm-12 mb-3">
                     <label class="form-label">Ghi chú</label>
-                    <textarea type="text" class="form-control" name="ghi_chu" placeholder="Ghi chí" required data-parsley-required-message="Vui lòng nhập ghi chú"></textarea>
+                    <textarea type="text" class="form-control" name="ghi_chu" placeholder="Ghi chú" required data-parsley-required-message="Vui lòng nhập ghi chú"></textarea>
                 </div>
             </div>
             <button style="width: fit-content" id="btn-submit-form" type="button" class="btn btn-primary py-8 fs-4 mb-4 rounded-2">Lưu</button>
@@ -70,26 +74,48 @@
 @endsection
 @section('page-js')
 <script>
-    $(document).ready(function () {
-        $(".san-pham").select2({
-            placeholder: "Chọn sản phẩm",
-            width: '100%',
-            closeOnSelect : true,
-            allowClear: true,
-            tags: false,
-            language: {
-                noResults: function (params) {
-                    return "Không tìm thấy kết quả";
-                }
-            },
-        });
+      $("#san-pham-1").select2({
+        placeholder: "Chọn sản phẩm",
+        width: '100%',
+        closeOnSelect : true,
+        allowClear: true,
+        tags: false,
+        language: {
+            noResults: function (params) {
+                return "Không tìm thấy kết quả";
+            }
+        },
     });
 </script>
 
 <script>
+    function tinhTongTien() {
+        var tongTienTatCa = 0;
+        $('.san-pham-row').each(function() {
+            let san_pham = $(this).find('select[name="san_pham"]').val();
+            let so_luong = $(this).find('input[name="so_luong"]').val();
+            let gia_nhap = $(this).find('input[name="gia_nhap"]').val();
+            let gia_ban = $(this).find('input[name="gia_ban"]').val();
+            tongTienTatCa += Number(so_luong) * Number(gia_nhap);
+
+        });
+        $('#tong-tien span').html(tongTienTatCa);
+    }
+</script>
+<script>
     $('#btn-them-san-pham').click(function (e) { 
 
         var dsSanPham = @json($dsSanPham);
+        let maxAttribute = 0;
+
+        $('.select-san-pham').each(function() {
+            let attributeValue = parseInt($(this).attr('data-attribute'));
+
+            if (attributeValue > maxAttribute) {
+                maxAttribute = attributeValue;
+            }
+        });
+
         var str = `<div class="san-pham-row"><div class="row mb-2">
                         <div class="col-md-4">Sản phẩm</div>
                         <div class="col-md-2">Số lượng</div>
@@ -100,8 +126,9 @@
                     <div>
                         <div class="row">
                             <div class="col-md-4">
-                                <select class="form-select mb-3 san-pham"
-                                    id="san-pham" 
+                                <select class="form-select mb-3 san-pham select-san-pham"
+                                    data-attribute="${maxAttribute + 1}" 
+                                    id="san-pham-${maxAttribute + 1}" 
                                     name="san_pham" 
                                     required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                     <option value=""></option>`
@@ -111,13 +138,13 @@
         str += `</select>
                     </div>
                     <div class="col-md-2">
-                        <input type="number" class="form-control" id="so-luong" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="1">
+                        <input type="number" class="form-control" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" id="so-luong" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="1">
                     </div>
                     <div class="col-md-2">
-                        <input type="number" class="form-control" id="gia-nhap" name="gia_nhap" required data-parsley-required-message="Vui lòng nhập giá nhập" value="0">
+                        <input type="number" class="form-control" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" id="gia-nhap" name="gia_nhap" required data-parsley-required-message="Vui lòng nhập giá nhập" value="0">
                     </div>
                     <div class="col-md-2">
-                        <input type="number" class="form-control" id="gia-ban" name="gia_ban" required data-parsley-required-message="Vui lòng nhập giá bán" value="0">
+                        <input type="number" class="form-control" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" id="gia-ban" name="gia_ban" required data-parsley-required-message="Vui lòng nhập giá bán" value="0">
                     </div>
                     <div class="col-md-2">
                         <a href="#" id="btn-xoa-san-pham" onClick="xoaSanPham(this)" class="btn btn-danger ms-3">
@@ -127,7 +154,12 @@
                 </div>
             </div></div>`
         $("#ds-san-pham").append(str);
-        $(".san-pham").select2({
+        
+        selectSanPham(maxAttribute + 1)
+    });
+
+    function selectSanPham(index) {
+        $("#" + "san-pham-" + index).select2({
             placeholder: "Chọn sản phẩm",
             width: '100%',
             closeOnSelect : true,
@@ -139,10 +171,11 @@
                 }
             },
         });
-    });
+    }
 
     function xoaSanPham(a) { 
         $(a).closest('.san-pham-row').remove();
+        tinhTongTien()
     }
 </script>
 <script>
@@ -156,14 +189,6 @@
         if($('#frm-them-hoa-don-nhap').parsley().validate()) {
         var formData = new FormData();
 
-        // let dsSanPham = $('.san-pham-row').map(function() {
-        //     return {
-        //         san_pham: $(this).find('select[name="san_pham"]').val(),
-        //         so_luong: $(this).find('input[name="so_luong"]').val(),
-        //         gia_nhap: $(this).find('input[name="gia_nhap"]').val(),
-        //         gia_ban: $(this).find('input[name="gia_ban"]').val()
-        //     };
-        // }).get();
         let dsSanPham = [];
         $('.san-pham-row').each(function() {
             let san_pham = $(this).find('select[name="san_pham"]').val();
@@ -201,11 +226,10 @@
             });
         });
 
-
-        console.log(dsSanPham);
         formData.append('dsSanPham', JSON.stringify(dsSanPham));
 
-        $("input[name='ngay_nhap']").map(function(){ formData.append('ma', this.value)}).get();
+        $("input[name='ngay_nhap']").map(function(){ formData.append('ngay_nhap', this.value)}).get();
+        $("textarea[name='ghi_chu']").map(function(){ formData.append('ghi_chu', this.value)}).get();
         $.ajax({
             url: "{{ route('nhap_hang.store') }}",
             type: 'POST',
