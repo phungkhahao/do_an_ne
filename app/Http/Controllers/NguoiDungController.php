@@ -13,12 +13,14 @@ class NguoiDungController extends Controller
     public function index()
     {
         $dsNguoiDung = User::all();
-        return view('nguoi-dung.danh-sach', compact('dsNguoiDung'));
+        $module     = "NguoiDung";
+        return view('nguoi-dung.danh-sach', compact('dsNguoiDung', 'module'));
     }
 
     public function create()
     {
-        return view('nguoi-dung.them');
+        $module     = "NguoiDung";
+        return view('nguoi-dung.them', compact('module'));
     }
 
     public function store(Request $request)
@@ -70,8 +72,9 @@ class NguoiDungController extends Controller
 
     public function edit($id)
     {
-        $nguoiDung = User::find($id);
-        return view('nguoi-dung.cap-nhat', compact('nguoiDung'));
+        $nguoiDung  = User::find($id);
+        $module     = "NguoiDung";
+        return view('nguoi-dung.cap-nhat', compact('nguoiDung', 'module'));
     }
 
     public function update(Request $request)

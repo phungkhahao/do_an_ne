@@ -27,6 +27,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'viewDashboard'])->name('dashboard');
     Route::get('/dang-xuat', [HomeController::class, 'dangXuat'])->name('dang_xuat');
+    Route::get('/thong-tin-tai-khoan', [HomeController::class, 'thongTinTaiKhoan'])->name('thong_tin_tai_khoan');
+    Route::post('/thong-tin-tai-khoan', [HomeController::class, 'capNhatTaiKhoan'])->name('cap_nhat_tai_khoan');
+    Route::post('/cap-nhat-mat-khau', [HomeController::class, 'capNhatMatKhau'])->name('cap_nhat_mat_khau');
 
     Route::prefix('san-pham')->group(function () {
         Route::name('san_pham.')->group(function () {

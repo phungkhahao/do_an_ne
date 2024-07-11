@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>Modernize Free</title>
+  <title>Quản lý sản phẩm</title>
   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/logos/favicon.png') }}" />
   @yield('page-css')
   @include('inc.common-css')
@@ -31,7 +31,7 @@
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
           <ul id="sidebarnav">
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('dashboard') }}" aria-expanded="false">
+              <a @if(!empty($module) && $module == "Dashboard") class="sidebar-link active" @else class="sidebar-link" @endif href="{{ route('dashboard') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
@@ -39,7 +39,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('san_pham.danh_sach') }}" aria-expanded="false">
+              <a @if(!empty($module) && $module == "SanPham") class="sidebar-link active" @else class="sidebar-link" @endif href="{{ route('san_pham.danh_sach') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-typography"></i>
                 </span>
@@ -47,7 +47,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('khach_hang.danh_sach') }}" aria-expanded="false">
+              <a @if(!empty($module) && $module == "KhachHang") class="sidebar-link active" @else class="sidebar-link" @endif href="{{ route('khach_hang.danh_sach') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-cards"></i>
                 </span>
@@ -55,7 +55,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('nha_cung_cap.danh_sach') }}" aria-expanded="false">
+              <a @if(!empty($module) && $module == "NhaCungCap") class="sidebar-link active" @else class="sidebar-link" @endif href="{{ route('nha_cung_cap.danh_sach') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-file-description"></i>
                 </span>
@@ -63,7 +63,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('vi_tri.danh_sach') }}" aria-expanded="false">
+              <a @if(!empty($module) && $module == "ViTri") class="sidebar-link active" @else class="sidebar-link" @endif href="{{ route('vi_tri.danh_sach') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-alert-circle"></i>
                 </span>
@@ -71,7 +71,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ route('nguoi_dung.danh_sach') }}" aria-expanded="false">
+              <a @if(!empty($module) && $module == "NguoiDung") class="sidebar-link active" @else class="sidebar-link" @endif href="{{ route('nguoi_dung.danh_sach') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-user-plus"></i>
                 </span>
@@ -107,11 +107,10 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                   
-                    {{-- <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                    <a href="{{ route('thong_tin_tai_khoan') }}" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p>
-                    </a> --}}
+                      <p class="mb-0 fs-3">Thông tin tài khoản</p>
+                    </a>
                     <a href="{{ route('dang_xuat') }}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
