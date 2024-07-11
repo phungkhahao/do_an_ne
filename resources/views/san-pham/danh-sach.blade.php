@@ -13,6 +13,7 @@
                     <tr>
                         <th>Mã sản phẩm</th>
                         <th>Tên sản phẩm</th>
+                        <th>Nhà cung cấp</th>
                         <th>Trạng thái</th>
                         <th>Mô tả</th>
                         <th></th>
@@ -23,6 +24,7 @@
                     <tr>
                         <td>{{ $sanPham->ma }}</td>
                         <td>{{ $sanPham->ten }}</td>
+                        <td>{{ $sanPham->nha_cung_cap->ho_ten }}</td>
                         <td>{{ $sanPham->trang_thai }}</td>
                         <td>{{ $sanPham->mo_ta }}</td>
                         <td>

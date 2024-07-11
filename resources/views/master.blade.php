@@ -39,6 +39,14 @@
               </a>
             </li>
             <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('nhap_hang.danh_sach') }}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-typography"></i>
+                </span>
+                <span class="hide-menu">Nhập hàng</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
               <a class="sidebar-link" href="{{ route('san_pham.danh_sach') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-typography"></i>
