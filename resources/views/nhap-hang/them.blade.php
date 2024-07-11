@@ -30,8 +30,9 @@
                         <div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <select class="form-select mb-3 san-pham"
-                                        id="san-pham" 
+                                    <select class="form-select mb-3 san-pham select-san-pham"
+                                        data-attribute="1"
+                                        id="san-pham-1" 
                                         name="san_pham" 
                                         required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                         <option value=""></option>
@@ -70,19 +71,17 @@
 @endsection
 @section('page-js')
 <script>
-    $(document).ready(function () {
-        $(".san-pham").select2({
-            placeholder: "Chọn sản phẩm",
-            width: '100%',
-            closeOnSelect : true,
-            allowClear: true,
-            tags: false,
-            language: {
-                noResults: function (params) {
-                    return "Không tìm thấy kết quả";
-                }
-            },
-        });
+      $("#san-pham-1").select2({
+        placeholder: "Chọn sản phẩm",
+        width: '100%',
+        closeOnSelect : true,
+        allowClear: true,
+        tags: false,
+        language: {
+            noResults: function (params) {
+                return "Không tìm thấy kết quả";
+            }
+        },
     });
 </script>
 
@@ -90,6 +89,17 @@
     $('#btn-them-san-pham').click(function (e) { 
 
         var dsSanPham = @json($dsSanPham);
+        let maxAttribute = 0;
+
+        $('.select-san-pham').each(function() {
+            let attributeValue = parseInt($(this).attr('data-attribute'));
+
+            if (attributeValue > maxAttribute) {
+                maxAttribute = attributeValue;
+            }
+        });
+
+        console.log(maxAttribute)
         var str = `<div class="san-pham-row"><div class="row mb-2">
                         <div class="col-md-4">Sản phẩm</div>
                         <div class="col-md-2">Số lượng</div>
@@ -100,8 +110,9 @@
                     <div>
                         <div class="row">
                             <div class="col-md-4">
-                                <select class="form-select mb-3 san-pham"
-                                    id="san-pham" 
+                                <select class="form-select mb-3 san-pham select-san-pham"
+                                    data-attribute="${maxAttribute + 1}" 
+                                    id="san-pham-${maxAttribute + 1}" 
                                     name="san_pham" 
                                     required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                     <option value=""></option>`
@@ -127,7 +138,12 @@
                 </div>
             </div></div>`
         $("#ds-san-pham").append(str);
-        $(".san-pham").select2({
+        
+        selectSanPham(maxAttribute + 1)
+    });
+
+    function selectSanPham(index) {
+        $("#" + "san-pham-" + index).select2({
             placeholder: "Chọn sản phẩm",
             width: '100%',
             closeOnSelect : true,
@@ -139,7 +155,7 @@
                 }
             },
         });
-    });
+    }
 
     function xoaSanPham(a) { 
         $(a).closest('.san-pham-row').remove();

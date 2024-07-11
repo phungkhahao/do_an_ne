@@ -12,13 +12,15 @@ class NhapHangController extends Controller
     public function index()
     {
         $dsHoaDonNhap = NhapHang::all();
-        return view('nhap-hang.danh-sach', compact('dsHoaDonNhap'));
+        $module = "NhapHang";
+        return view('nhap-hang.danh-sach', compact('dsHoaDonNhap', 'module'));
     }
 
     public function create()
     {
         $dsSanPham = SanPham::all();
-        return view('nhap-hang.them', compact('dsSanPham'));
+        $module = "NhapHang";
+        return view('nhap-hang.them', compact('dsSanPham', 'module'));
     }
 
     public function store(Request $request) {
