@@ -7,6 +7,7 @@ use App\Http\Controllers\KhachHangController;
 use App\Http\Controllers\NguoiDungController;
 use App\Http\Controllers\NhaCungCapController;
 use App\Http\Controllers\NhapHangController;
+use App\Http\Controllers\XuatHangController;
 use App\Http\Controllers\ViTriController;
 
 /*
@@ -41,6 +42,25 @@ Route::middleware('auth')->group(function () {
             Route::get('/cap-nhat/{id}', [NhapHangController::class, 'edit'])->name('edit');
             Route::post('/cap-nhat', [NhapHangController::class, 'update'])->name('update');
             Route::post('/xoa', [NhapHangController::class, 'delete'])->name('delete');
+
+        });
+    });
+
+    Route::prefix('kho-hang')->group(function () {
+        Route::name('kho_hang.')->group(function () {
+            Route::get('/danh-sach', [NhapHangController::class, 'viewKhoHang'])->name('danh_sach');
+        });
+    });
+    
+    Route::prefix('xuat-hang')->group(function () {
+        Route::name('xuat_hang.')->group(function () {
+            Route::get('/danh-sach', [XuatHangController::class, 'index'])->name('danh_sach');
+            Route::get('/them-moi', [XuatHangController::class, 'create'])->name('create');
+            Route::post('/them-moi', [XuatHangController::class, 'store'])->name('store');
+            Route::get('/chi-tiet/{id}', [XuatHangController::class, 'detail'])->name('detail');
+            Route::get('/cap-nhat/{id}', [XuatHangController::class, 'edit'])->name('edit');
+            Route::post('/cap-nhat', [XuatHangController::class, 'update'])->name('update');
+            Route::post('/xoa', [XuatHangController::class, 'delete'])->name('delete');
 
         });
     });

@@ -21,8 +21,14 @@ class NhapHang extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    
     public function chi_tiet()
     {
         return $this->hasMany(ChiTietNhapHang::class);
+    }
+
+    public function vi_tri()
+    {
+        return $this->belongsTo(ViTri::class);
     }
 }

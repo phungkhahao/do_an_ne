@@ -47,6 +47,22 @@
               </a>
             </li>
             <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('xuat_hang.danh_sach') }}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-typography"></i>
+                </span>
+                <span class="hide-menu">Xuất hàng</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('kho_hang.danh_sach') }}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-typography"></i>
+                </span>
+                <span class="hide-menu">Kho hàng</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
               <a @if(!empty($module) && $module == "SanPham") class="sidebar-link active" @else class="sidebar-link" @endif href="{{ route('san_pham.danh_sach') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-typography"></i>

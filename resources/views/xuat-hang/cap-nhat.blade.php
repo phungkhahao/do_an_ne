@@ -5,24 +5,24 @@
         <form id="frm-cap-nhat-hoa-don-nhap" data-parsley-validate>
             @csrf
             <div class="row">
-                <input type="hidden" name="nhap_hang_id" value="{{$donHang->id}}">
+                <input type="hidden" name="xuat_hang_id" value="{{$donHang->id}}">
                 <div class="col-md-6 col-sm-12 mb-3">
                     <label class="form-label">Ngày nhập</label>
-                    <input type="date" class="form-control" name="ngay_nhap" required data-parsley-required-message="Vui lòng nhập ngày" value="{{ $donHang->ngay_nhap }}">
+                    <input type="date" class="form-control" name="ngay_xuat" required data-parsley-required-message="Vui lòng nhập ngày" value="{{ $donHang->ngay_xuat }}">
                 </div>
                 <div class="col-md-6 col-sm-12 mb-3">
-                    <label class="form-label">Vị trí</label>
+                    <label class="form-label">Khách hàng</label>
                     <select class="form-select mb-3 san-pham select-san-pham"
-                        id="vi-tri" 
-                        name="vi_tri" 
-                        data-parsley-errors-container="#error-parley-vi-tri"
-                        required data-parsley-required-message="Vui lòng chọn vị trí">
+                        id="khach-hang" 
+                        name="khach_hang" 
+                        data-parsley-errors-container="#error-parley-khach-hang"
+                        required data-parsley-required-message="Vui lòng chọn khách hàng">
                         <option value=""></option>
-                        @foreach ($dsViTri as $viTri)
-                            <option @if($viTri->id == $donHang->vi_tri_id) selected @endif value="{{ $viTri->id }}">{{ $viTri->ten }}</option>
+                        @foreach ($dsKhachHang as $khachHang)
+                            <option  @if($khachHang->id==$donHang->khach_hang_id) selected @endif  value="{{ $khachHang->id }}">{{ $khachHang->ho_ten }}</option>
                         @endforeach
                     </select>
-                    <div id="error-parley-vi-tri"></div>                
+                    <div id="error-parley-khach-hang"></div>                
                 </div>
                 <div class="col-md-6 col-sm-12 mb-3 align-self-end">
                     <a href="#" id="btn-them-san-pham" class="btn btn-primary mt-2 mt-lg-1 ms-3">
@@ -39,7 +39,6 @@
                             <div class="row mb-2">
                                 <div class="col-md-4">Sản phẩm</div>
                                 <div class="col-md-2">Số lượng</div>
-                                <div class="col-md-2">Giá nhập</div>
                                 <div class="col-md-2">Giá bán</div>
                                 <div class="col-md-2"></div>
                             </div>
@@ -53,8 +52,8 @@
                                             data-parsley-errors-container="#error-parley-san-pham-{{$key + 1}}"
                                             required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                             <option value=""></option>
-                                            @foreach ($dsSanPham as $sanPham)
-                                                <option @if($sanPham->id==$chiTiet->san_pham_id) selected @endif value="{{ $sanPham->id }}">{{ $sanPham->ten }}</option>
+                                            @foreach ($dsKhoHang as $khoHang)
+                                                <option @if($khoHang->id == $chiTiet->kho_hang_id) selected @endif value="{{ $khoHang->id }}">{{ $khoHang->san_pham->ten }} ({{ "DX".str_pad($khoHang->idNhapHang, 8, "0", STR_PAD_LEFT) }})</option>
                                             @endforeach
                                         </select>
                                         <div id="error-parley-san-pham-{{ $key + 1 }}"></div>
@@ -63,10 +62,10 @@
                                         <input type="number" class="form-control" id="so-luong" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="{{ $chiTiet->so_luong }}">
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="number" class="form-control" id="gia-nhap" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="gia_nhap" required data-parsley-required-message="Vui lòng nhập giá nhập" value="{{ $chiTiet->gia_nhap }}">
+                                        <input type="number" disabled class="form-control" id="gia-ban-goi-y" name="gia_ban_goi_y">
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="number" class="form-control" id="gia-ban" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="gia_ban" required data-parsley-required-message="Vui lòng nhập giá bán" value="{{ $chiTiet->gia_ban }}">
+                                        <input type="number" class="form-control" id="gia-ban" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="gia_ban" required data-parsley-required-message="Vui lòng nhập giá bán" value="{{ $chiTiet->don_gia }}">
                                     </div>
                                     <div class="col-md-2">
                                         <a href="#" id="btn-xoa-san-pham" onClick="xoaSanPham(this)" class="btn btn-danger ms-3">
@@ -80,10 +79,6 @@
                 </div>
                 <div class="col-md-12 col-sm-12 mb-3 mt-3">
                     <h5 id="tong-tien">Tổng tiền: <span>{{ $donHang->tong_tien }}</span></h5>
-                </div>
-                <div class="col-md-12 col-sm-12 mb-3">
-                    <label class="form-label">Ghi chú</label>
-                    <textarea type="text" class="form-control" name="ghi_chu" placeholder="Ghi chú">{{ $donHang->ghi_chu }}</textarea>
                 </div>
             </div>
             <button style="width: fit-content" id="btn-submit-form" type="button" class="btn btn-primary py-8 fs-4 mb-4 rounded-2">Lưu</button>
@@ -111,19 +106,6 @@
                 },
             });
         }
-
-        $("#vi-tri").select2({
-            placeholder: "Chọn vị trí",
-            width: '100%',
-            closeOnSelect : true,
-            allowClear: true,
-            tags: false,
-            language: {
-                noResults: function (params) {
-                    return "Không tìm thấy kết quả";
-                }
-            },
-        });
     })
 </script>
 
@@ -133,9 +115,8 @@
         $('.san-pham-row').each(function() {
             let san_pham = $(this).find('select[name="san_pham"]').val();
             let so_luong = $(this).find('input[name="so_luong"]').val();
-            let gia_nhap = $(this).find('input[name="gia_nhap"]').val();
             let gia_ban = $(this).find('input[name="gia_ban"]').val();
-            tongTienTatCa += Number(so_luong) * Number(gia_nhap);
+            tongTienTatCa += Number(so_luong) * Number(gia_ban);
 
         });
         $('#tong-tien span').html(tongTienTatCa);
@@ -144,7 +125,7 @@
 <script>
     $('#btn-them-san-pham').click(function (e) { 
 
-        var dsSanPham = @json($dsSanPham);
+        var dsKhoHang = @json($dsKhoHang);
         let maxAttribute = 0;
 
         $('.select-san-pham').each(function() {
@@ -172,8 +153,8 @@
                                     data-parsley-errors-container="#error-parley-san-pham-${maxAttribute + 1}"
                                     required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                     <option value=""></option>`
-                                    $.map(dsSanPham, function (element, index) {
-                                        str += `<option value="${element.id}">${element.ten}</option>`
+                                    $.map(dsKhoHang, function (element, index) {
+                                        str += `<option value="${element.id}">${element.san_pham.ten} (${ "DX" + padNumber(element.idNhapHang, 8, "0") })</option>`
                                     });
                 str += `</select>
                 <div id="error-parley-san-pham-${maxAttribute + 1}"></div>
@@ -183,7 +164,7 @@
                         <input type="number" class="form-control" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" id="so-luong" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="1">
                     </div>
                     <div class="col-md-2">
-                        <input type="number" class="form-control" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" id="gia-nhap" name="gia_nhap" required data-parsley-required-message="Vui lòng nhập giá nhập" value="0">
+                        <input type="number" class="form-control" id="gia-ban-goi-y" name="gia_ban_goi_y" disabled>
                     </div>
                     <div class="col-md-2">
                         <input type="number" class="form-control" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" id="gia-ban" name="gia_ban" required data-parsley-required-message="Vui lòng nhập giá bán" value="0">
@@ -215,6 +196,12 @@
         });
     }
 
+    function padNumber(num, width, padChar) {
+        padChar = padChar || '0';
+        num = num + ''; // Convert to string
+        return num.length >= width ? num : new Array(width - num.length + 1).join(padChar) + num;
+    }
+
     function xoaSanPham(a) { 
         $(a).closest('.san-pham-row').remove();
         tinhTongTien()
@@ -227,6 +214,7 @@
         });
     }
 
+
     $('#btn-submit-form').click(function() {
         if($('#frm-cap-nhat-hoa-don-nhap').parsley().validate()) {
         var formData = new FormData();
@@ -236,7 +224,6 @@
         $('.san-pham-row').each(function() {
             let san_pham = $(this).find('select[name="san_pham"]').val();
             let so_luong = $(this).find('input[name="so_luong"]').val();
-            let gia_nhap = $(this).find('input[name="gia_nhap"]').val();
             let gia_ban = $(this).find('input[name="gia_ban"]').val();
 
             // Kiểm tra số lượng
@@ -264,25 +251,22 @@
             }
         
             dsSanPham.push({
-                san_pham: san_pham,
+                id: san_pham,
                 so_luong: so_luong,
-                gia_nhap: gia_nhap,
-                gia_ban: gia_ban
+                don_gia: gia_ban
             });
         });
 
         if(!flag){
             return
         }
-        formData.append('dsSanPham', JSON.stringify(dsSanPham));
+        formData.append('dsKhoHang', JSON.stringify(dsSanPham));
 
-        $("input[name='ngay_nhap']").map(function(){ formData.append('ngay_nhap', this.value)}).get();
-        $("input[name='nhap_hang_id']").map(function(){ formData.append('nhap_hang_id', this.value)}).get();
-        $("select[name='vi_tri']").map(function(){ formData.append('vi_tri', this.value)}).get();
-
-        $("textarea[name='ghi_chu']").map(function(){ formData.append('ghi_chu', this.value)}).get();
+        $("input[name='ngay_xuat']").map(function(){ formData.append('ngay_xuat', this.value)}).get();
+        $("select[name='khach_hang']").map(function(){ formData.append('khach_hang_id', this.value)}).get();
+        $("input[name='xuat_hang_id']").map(function(){ formData.append('xuat_hang_id', this.value)}).get();
         $.ajax({
-            url: "{{ route('nhap_hang.update') }}",
+            url: "{{ route('xuat_hang.update') }}",
             type: 'POST',
             data: formData,
             cache:false,

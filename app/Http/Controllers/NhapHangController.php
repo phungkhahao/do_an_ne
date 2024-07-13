@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\ChiTietNhapHang;
 use App\Models\KhoHang;
 use App\Models\NhapHang;
 use App\Models\SanPham;
+use App\Models\ViTri;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -22,9 +25,10 @@ class NhapHangController extends Controller
 
     public function create()
     {
-        $dsSanPham = SanPham::all();
+        $dsSanPham  = SanPham::all();
+        $dsViTri    = ViTri::all();
         $module = "NhapHang";
-        return view('nhap-hang.them', compact('dsSanPham', 'module'));
+        return view('nhap-hang.them', compact('dsViTri', 'dsSanPham', 'module'));
     }
 
     public function store(Request $request) {
@@ -32,11 +36,12 @@ class NhapHangController extends Controller
             $request->all(),
             [
                 'ngay_nhap' => "required",
-                'ghi_chu'   => "required",
+                'vi_tri'    => "required",
+
             ],
             [
-                'ngay_nhap.required' => 'Họ tên không được trống',
-                'ghi_chu.required'   => 'Ghi chú không được trống',
+                'ngay_nhap.required' => 'Ngày nhập không được trống',
+                'vi_tri.required'   => 'Vị trí không được trống',
             ]
         );
 
@@ -52,7 +57,8 @@ class NhapHangController extends Controller
         $nhapHang->user_id         = Auth::user()->id;
         $nhapHang->ngay_nhap       = $request->ngay_nhap;
         $nhapHang->ghi_chu         = $request->ghi_chu;
-        $nhapHang->tong_tien = $tongTien;
+        $nhapHang->vi_tri_id       = $request->vi_tri;
+        $nhapHang->tong_tien       = $tongTien;
         $nhapHang->save();
 
         $dsSanPham = json_decode($request->dsSanPham);
@@ -97,8 +103,10 @@ class NhapHangController extends Controller
     {
         $donHang    = NhapHang::find($id);
         $dsSanPham  = SanPham::all();
-        $module = "NhapHang";
-        return view('nhap-hang.cap-nhat', compact('donHang', 'dsSanPham', 'module'));
+        $module     = "NhapHang";
+        $dsViTri    = ViTri::all();
+
+        return view('nhap-hang.cap-nhat', compact('dsViTri', 'donHang', 'dsSanPham', 'module'));
     }
 
     public function update(Request $request){
@@ -108,11 +116,13 @@ class NhapHangController extends Controller
             $request->all(),
             [
                 'ngay_nhap' => "required",
-                'ghi_chu'   => "required",
+                'vi_tri'   => "required",
+
             ],
             [
-                'ngay_nhap.required' => 'Họ tên không được trống',
-                'ghi_chu.required'   => 'Ghi chú không được trống',
+                'ngay_nhap.required' => 'Ngày nhập không được trống',
+                'vi_tri.required'    => 'Vị trí không được trống',
+
             ]
         );
 
@@ -127,12 +137,13 @@ class NhapHangController extends Controller
         $nhapHang->user_id         = Auth::user()->id;
         $nhapHang->ngay_nhap       = $request->ngay_nhap;
         $nhapHang->ghi_chu         = $request->ghi_chu;
+        $nhapHang->vi_tri_id       = $request->vi_tri;
         $nhapHang->tong_tien       = $tongTien;
         $nhapHang->save();
 
         foreach ($nhapHang->chi_tiet as $chiTiet) {
             ChiTietNhapHang::find($chiTiet->id)->delete();
-            KhoHang::where('chi_tiet_nhap_hang_id', $chiTiet)->delete();
+            KhoHang::where('chi_tiet_nhap_hang_id', $chiTiet->id)->delete();
         }
 
         $dsSanPham = json_decode($request->dsSanPham);
@@ -164,4 +175,15 @@ class NhapHangController extends Controller
             'redirect'  => route('nhap_hang.danh_sach')
         ], 200);
     }
+
+    public function viewKhoHang()
+    {
+        $dsKhoHang = KhoHang::select(['kho_hang.*', 'nhap_hang.id as idNhapHang' ])
+        ->leftjoin('chi_tiet_nhap_hang', 'chi_tiet_nhap_hang.id', '=', 'kho_hang.chi_tiet_nhap_hang_id')
+        ->leftjoin('nhap_hang', 'nhap_hang.id', '=', 'chi_tiet_nhap_hang.nhap_hang_id')
+        ->get();
+        $module = "KhoHang";
+        return view('kho-hang', compact('dsKhoHang', 'module'));
+    }
+
 }

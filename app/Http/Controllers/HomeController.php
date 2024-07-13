@@ -46,10 +46,13 @@ class HomeController extends Controller
     {
         $soLuongKhachHang   = KhachHang::count();
         $soLuongNhaCungCap  = NhaCungCap::count();
-        $soLuongXuatHang  = XuatHang::count();
-        $soLuongNhapHang  = NhapHang::count();
+        $soLuongXuatHang    = XuatHang::count();
+        $soLuongNhapHang    = NhapHang::count();
 
-        return view('dashboard', compact('soLuongKhachHang', 'soLuongNhaCungCap', 'soLuongXuatHang', 'soLuongNhapHang'));
+        $dsNhapHang = Nhaphang::orderBy('created_at', 'desc')->take(5)->get();
+        $dsXuatHang = XuatHang::orderBy('created_at', 'desc')->take(5)->get();
+
+        return view('dashboard', compact('dsNhapHang', 'dsXuatHang', 'soLuongKhachHang', 'soLuongNhaCungCap', 'soLuongXuatHang', 'soLuongNhapHang'));
     }
 
     public function thongTinTaiKhoan()

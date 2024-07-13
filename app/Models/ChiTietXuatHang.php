@@ -11,4 +11,7 @@ class ChiTietXuatHang extends Model
     use HasFactory, SoftDeletes;
     protected $table = 'chi_tiet_xuat_hang';
 
+    public function san_pham() {
+        return $this->belongsTo(SanPham::class);
+    }
 }

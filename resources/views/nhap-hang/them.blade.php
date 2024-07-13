@@ -9,6 +9,20 @@
                     <label class="form-label">Ngày nhập</label>
                     <input type="date" class="form-control" name="ngay_nhap" required data-parsley-required-message="Vui lòng nhập ngày" value="{{  \Carbon\Carbon::now()->format('Y-m-d') }}">
                 </div>
+                <div class="col-md-6 col-sm-12 mb-3">
+                    <label class="form-label">Vị trí</label>
+                    <select class="form-select mb-3 san-pham select-san-pham"
+                        id="vi-tri" 
+                        name="vi_tri" 
+                        data-parsley-errors-container="#error-parley-vi-tri"
+                        required data-parsley-required-message="Vui lòng chọn vị trí">
+                        <option value=""></option>
+                        @foreach ($dsViTri as $viTri)
+                            <option value="{{ $viTri->id }}">{{ $viTri->ten }}</option>
+                        @endforeach
+                    </select>
+                    <div id="error-parley-vi-tri"></div>                
+                </div>
                 <div class="col-md-6 col-sm-12 mb-3 align-self-end">
                     <a href="#" id="btn-them-san-pham" class="btn btn-primary mt-2 mt-lg-1 ms-3">
                         <i class="bx bxs-plus-square"></i>Thêm sản phẩm
@@ -34,12 +48,14 @@
                                         data-attribute="1"
                                         id="san-pham-1" 
                                         name="san_pham" 
+                                        data-parsley-errors-container="#error-parley-san-pham-1"
                                         required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                         <option value=""></option>
                                         @foreach ($dsSanPham as $sanPham)
                                             <option value="{{ $sanPham->id }}">{{ $sanPham->ten }}</option>
                                         @endforeach
                                     </select>
+                                    <div id="error-parley-san-pham-1"></div>
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" class="form-control" id="so-luong" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="1">
@@ -64,7 +80,7 @@
                 </div>
                 <div class="col-md-12 col-sm-12 mb-3">
                     <label class="form-label">Ghi chú</label>
-                    <textarea type="text" class="form-control" name="ghi_chu" placeholder="Ghi chú" required data-parsley-required-message="Vui lòng nhập ghi chú"></textarea>
+                    <textarea type="text" class="form-control" name="ghi_chu" placeholder="Ghi chú"></textarea>
                 </div>
             </div>
             <button style="width: fit-content" id="btn-submit-form" type="button" class="btn btn-primary py-8 fs-4 mb-4 rounded-2">Lưu</button>
@@ -74,8 +90,21 @@
 @endsection
 @section('page-js')
 <script>
-      $("#san-pham-1").select2({
+    $("#san-pham-1").select2({
         placeholder: "Chọn sản phẩm",
+        width: '100%',
+        closeOnSelect : true,
+        allowClear: true,
+        tags: false,
+        language: {
+            noResults: function (params) {
+                return "Không tìm thấy kết quả";
+            }
+        },
+    });
+
+    $("#vi-tri").select2({
+        placeholder: "Chọn vị trí",
         width: '100%',
         closeOnSelect : true,
         allowClear: true,
@@ -130,12 +159,14 @@
                                     data-attribute="${maxAttribute + 1}" 
                                     id="san-pham-${maxAttribute + 1}" 
                                     name="san_pham" 
+                                    data-parsley-errors-container="#error-parley-san-pham-${maxAttribute + 1}"
                                     required data-parsley-required-message="Vui lòng chọn sản phẩm">
                                     <option value=""></option>`
                                     $.map(dsSanPham, function (element, index) {
                                         str += `<option value="${element.id}">${element.ten}</option>`
                                     });
-        str += `</select>
+                    str += `</select>
+                    <div id="error-parley-san-pham-${maxAttribute + 1}"></div>
                     </div>
                     <div class="col-md-2">
                         <input type="number" class="form-control" onblur="tinhTongTien(this)" oninput="tinhTongTien(this)" onchange="tinhTongTien(this)" id="so-luong" name="so_luong" required data-parsley-required-message="Vui lòng nhập số lượng" value="1">
@@ -188,7 +219,7 @@
     $('#btn-submit-form').click(function() {
         if($('#frm-them-hoa-don-nhap').parsley().validate()) {
         var formData = new FormData();
-
+        var flag = true
         let dsSanPham = [];
         $('.san-pham-row').each(function() {
             let san_pham = $(this).find('select[name="san_pham"]').val();
@@ -198,6 +229,7 @@
 
             // Kiểm tra số lượng
             if (so_luong <= 0) {
+                flag = false
                 Swal.fire({
                     title: 'Lỗi!',
                     text: 'Số lượng sản phẩm phải lớn hơn 0.',
@@ -209,6 +241,7 @@
 
             // Kiểm tra trùng sản phẩm
             if (isDuplicateSanPham(dsSanPham, san_pham)) {
+                flag = false
                 Swal.fire({
                     title: 'Lỗi!',
                     text: 'Sản phẩm đã tồn tại trong danh sách.',
@@ -226,10 +259,18 @@
             });
         });
 
+
+        if(!flag) 
+        {
+            return
+        }
+
         formData.append('dsSanPham', JSON.stringify(dsSanPham));
 
         $("input[name='ngay_nhap']").map(function(){ formData.append('ngay_nhap', this.value)}).get();
         $("textarea[name='ghi_chu']").map(function(){ formData.append('ghi_chu', this.value)}).get();
+        $("select[name='vi_tri']").map(function(){ formData.append('vi_tri', this.value)}).get();
+
         $.ajax({
             url: "{{ route('nhap_hang.store') }}",
             type: 'POST',

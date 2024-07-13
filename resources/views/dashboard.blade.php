@@ -79,4 +79,62 @@
             </div>
         </div>
     </div>
+    <span>Danh sách nhập hàng mới</span>
+    <div class="row mt-2">
+        <div class="table-responsive">
+            <table id="chi-tiet" class="table table-bordered cus-talbe" >
+                <thead style="text-align: center">
+                    <tr>
+                        <th>Mã hóa đơn</th>
+                        <th>Ngày nhập</th>
+                        <th>Nhân viên nhập</th>
+                        <th>Tổng tiền</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($dsNhapHang as $hoaDonNhap)
+                    <tr>
+                        <td>{{ $hoaDonNhap->ma_don_nhap }}</td>
+                        <td>{{ \Carbon\Carbon::parse($hoaDonNhap->ngay_nhap)->format('d/m/Y') }}</td>
+                        <td>{{ $hoaDonNhap->nhan_vien->ho_ten }}</td>
+                        <td>{{ number_format($hoaDonNhap->tong_tien) }}</td>
+                        <td>
+                            <a href="{{ route('nhap_hang.detail', ['id' => $hoaDonNhap->id]) }}" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path></svg></a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <span>Danh sách xuất hàng mới</span>
+    <div class="row mt-2">
+        <div class="table-responsive">
+            <table id="chi-tiet" class="table table-bordered cus-talbe" >
+                <thead style="text-align: center">
+                    <tr>
+                        <th>Mã hóa đơn</th>
+                        <th>Ngày xuất</th>
+                        <th>Nhân viên xuất</th>
+                        <th>Tổng tiền</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($dsXuatHang as $hoaDonXuat)
+                    <tr>
+                        <td>{{ $hoaDonXuat->ma_don_xuat }}</td>
+                        <td>{{ \Carbon\Carbon::parse($hoaDonXuat->ngay_xuat)->format('d/m/Y') }}</td>
+                        <td>{{ $hoaDonXuat->nhan_vien->ho_ten }}</td>
+                        <td>{{ number_format($hoaDonXuat->tong_tien) }}</td>
+                        <td>
+                            <a href="{{ route('xuat_hang.detail', ['id' => $hoaDonXuat->id]) }}" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path></svg></a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection

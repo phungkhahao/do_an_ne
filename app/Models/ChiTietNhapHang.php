@@ -15,4 +15,9 @@ class ChiTietNhapHang extends Model
     public function san_pham() {
         return $this->belongsTo(SanPham::class);
     }
+
+    public function nhap_hang()
+    {
+        return $this->belongsTo(NhapHang::class);
+    }
 }
